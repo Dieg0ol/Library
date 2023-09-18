@@ -1,25 +1,30 @@
-/*modal variables.*/ 
+/*modal variables.*/
 const modal = document.getElementsByClassName("modal")[0];
 const btn = document.getElementById("test");
 const span = document.getElementsByClassName("close")[0];
 
 
+
+
+//btnRead
+
+
 // when clicked, modal opens
-btn.onclick = function() {
+btn.onclick = function () {
     modal.style.display = "block";
 }
 
 /*config the close button to close the modal*/
-span.onclick = function() {
-    modal.style.display = "none";
-} 
-
-/*when the user clicks anywhere outside of the modal, close it*/ 
-window.onclick = function(event) {
-if(event.target == modal) {
+span.onclick = function () {
     modal.style.display = "none";
 }
-} 
+
+/*when the user clicks anywhere outside of the modal, close it*/
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 
 
 
@@ -31,26 +36,43 @@ let myLibrary = [];
 
 
 // função construtora de Book
-function Book(title, autor, pages, read) { 
+function Book(title, autor, pages, read) {
     this.title = title;
     this.autor = autor;
     this.pages = pages;
-    this.read  = read;
+    this.read = read;
 }
 
 function render() {
     let libraryEl = document.getElementById('library');
     libraryEl.innerHTML = "";
-    libraryEl.setAttribute("class", "book-card");
 
-    for(let i = 0; i < myLibrary.length; i++){
+
+
+    for (let i = 0; i < myLibrary.length; i++) {
         let book = myLibrary[i];
         let bookEl = document.createElement("div");
-        bookEl.innerHTML = `<p>${book.title}</p>`
-        libraryEl.appendChild(bookEl);
-        
+        bookEl.innerHTML =
+            `
+            <div class="book-card">
+            <div class="card-header">
+            <span class="remove-book close" onclick=removeBook(${i})>&times;</span> 
+            
+                <h1 class="normal-title">${book.title}</h1>
+                <p>${book.autor}</p>
+            </div>
+            <div class="card-body"> 
+            <p>${book.pages}</p>
+            <p class ="btn-read" id="btn-read">${book.read ? "Read": "Not Yeat"}</p>
+            
+            </div>
+        </div>`
+        libraryEl.appendChild(bookEl); // coloca os itens no html
     }
-    
+}
+function removeBook(index) {
+    myLibrary.splice(index, 1);
+    render();
 }
 
 // função para adicionar os livros do usuario.
@@ -60,7 +82,7 @@ function addBookToLibrary() {
     let title = document.getElementById("title").value;
     let autor = document.getElementById("autor").value;
     let pages = document.getElementById("pages").value;
-    let read =  document.getElementById("read").checked
+    let read = document.getElementById("read").checked
     let newBook = new Book(title, autor, pages, read); //instancia o objeto book.
 
     // adicionamos ao array os itens criados.
@@ -74,9 +96,11 @@ function addBookToLibrary() {
 }
 
 //seleciona o forms e adicionamos um evento, quando submit acontece chama uma função anonima
-document.querySelector(".form-book").addEventListener("submit",  function(event) {
+document.querySelector(".form-book").addEventListener("submit", function (event) {
     event.preventDefault()
     addBookToLibrary();
+    modal.style.display = "none";
+
 
 })
 
